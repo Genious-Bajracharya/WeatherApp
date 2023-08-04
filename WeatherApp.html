@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Weather</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  
+  <body>
+
+	<h1>Weather in Luton</h1>
+<div class=info>
+  <h3>City: <span id="city"></span></h3>
+  <h3>Weather: <span id="Weather"></span></h3>
+  <h3>Time: <span id="myLastUpdated"></span></h3>
+  <h3>Currrent Temperature: <span id="Temperature"></span></h3>
+  <h3>Minimum_temperature: <span id="mintemp"></span></h3>
+  <h3>Maximum_temperature: <span id="maxtemp"></span></h3>
+  <h3>Wind: <span id="wind"></span></h3>
+  <h3>Humidity: <span id="humidity"></span></h3>
+  <div class=pic> <img src="" alt="" id="img">
+
+</div>
+
+
+	<script>
+
+
+if(localStorage.when != null
+   && parseInt(localStorage.when) + 10000 > Date.now()) {
+
+	let freshness = Math.round((Date.now() - localStorage.when)/1000) + " second(s)";
+	document.getElementById("Weather").innerHTML = localStorage.Weather;
+	document.getElementById("Temperature").innerHTML = localStorage.Temperature;
+	document.getElementById("myLastUpdated").innerHTML = freshness;
+  document.getElementById("mintemp").innerHTML = localStorage.mintemp;
+  document.getElementById("maxtemp").innerHTML = localStorage.maxtemp;
+  document.getElementById("city").innerHTML = localStorage.city;
+  document.getElementById("wind").innerHTML = localStorage.wind;
+  document.getElementById("humidity").innerHTML = localStorage.humidity;
+  document.querySelector('img').src='http://openweathermap.org/img/wn/10d@2x.png'
+
+} else {
+	fetch('http://localhost:8080/api_2060357.php?city=luton')
+
+	  .then(response => response.json())
+	  .then(response => {
+
+		document.getElementById("Weather").innerHTML = response.weather_description;
+		document.getElementById("Temperature").innerHTML = response.weather_temperature + '°';
+		document.getElementById("myLastUpdated").innerHTML = response.weather_when;
+    document.getElementById("mintemp").innerHTML = response.Minimum_Temperature+ '°';
+    document.getElementById("maxtemp").innerHTML = response.Maximum_Temperature+ '°';
+    document.getElementById("city").innerHTML = response.city;
+    document.getElementById("wind").innerHTML = response.weather_wind+ " m/s";
+    document.getElementById("humidity").innerHTML = response.Humidity+ " %";
+    document.querySelector('img').src='http://openweathermap.org/img/wn/10d@2x.png'
+
+		localStorage.Weather = response.weather_description;
+		localStorage.Temperature = response.weather_temperature + '°';
+    localStorage.mintemp = response.Minimum_Temperature + '°';
+    localStorage.maxtemp = response.Maximum_Temperature + '°';
+    localStorage.city = response.city;
+    localStorage.wind = response.weather_wind + " m/s";
+    localStorage.humidity = response.Humidity + " %";
+		localStorage.when = Date.now();
+
+	  })
+	  .catch(err => {
+
+		console.log(err);
+	});
+
+}
+	</script>
+  
+  <!-- <script>
+    fetch('http://localhost:8080/api_2060357.php?city=luton')
+
+.then(response => response.json())
+.then(response => {
+
+document.getElementById("Weather").innerHTML = response.weather_description;
+document.getElementById("Temperature").innerHTML = response.weather_temperature + '°';
+document.getElementById("myLastUpdated").innerHTML = response.weather_when;
+document.getElementById("mintemp").innerHTML = response.Minimum_Temperature+ '°';
+document.getElementById("maxtemp").innerHTML = response.Maximum_Temperature+ '°';
+document.getElementById("city").innerHTML = response.city;
+document.getElementById("wind").innerHTML = response.weather_wind+ " m/s";
+document.getElementById("humidity").innerHTML = response.Humidity+ " %";
+document.querySelector('img').src='http://openweathermap.org/img/wn/10d@2x.png'
+localStorage.when = Date.now();
+
+})
+.catch(err => {
+
+console.log(err);
+});
+
+  </script> -->
+  </body>
+</html>
